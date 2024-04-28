@@ -17,6 +17,25 @@ def rotation_droite(cle):
     return nouv_cle
 nouvelle_cle=rotation_droite(cle)
 
+def test_cle_valide(cle):
+    #Pour vérifier si une clé est valide, ses cases ne doivent pas se superposer
+    copie_cle = [list(row) for row in cle] #Vraie copie de liste, sans modification de l'original
+    rotation1=rotation_droite(copie_cle)
+    rotation2=rotation_droite(rotation1)
+    rotation3=rotation_droite(rotation2) #Pour obtenir tous les sens possibles, on fait une rotation de la rotation précédente
+    taille=len(cle[0])
+    for ligne in range(taille):
+        for colonne in range(taille):
+            copie_cle[ligne][colonne]+=rotation1[ligne][colonne]
+            copie_cle[ligne][colonne]+=rotation2[ligne][colonne]
+            copie_cle[ligne][colonne]+=rotation3[ligne][colonne]
+    #Si après avoir supperposé tous les sens on obtient une case plus grande que 1, la clé n'est pas valide
+    for ligne in range(taille):
+        for colonne in range(taille):
+            if copie_cle[ligne][colonne]>1:
+                return False
+    return True
+
 def remplir_resultat(cle,message,resultat):
     taille=len(cle[0])
     for ligne in range(taille): #On parcours la clé
