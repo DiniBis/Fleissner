@@ -15,7 +15,14 @@ def rotation_droite(cle):
         for colonne in range(taille):
             nouv_cle[colonne][taille-1-ligne]=cle[ligne][colonne] #Lors d'une rotation vers la droite, ma première ligne devient ma dernière colonne
     return nouv_cle
-nouvelle_cle=rotation_droite(cle)
+
+def rotation_gauche(cle):
+    taille=len(cle[0])
+    nouv_cle=[[0]*taille for i in range(taille)] #création d'une nouvelle clé vide aux mêmes dimensions
+    for ligne in range(taille):
+        for colonne in range(taille):
+            nouv_cle[taille-1-colonne][ligne]=cle[ligne][colonne] #Lors d'une rotation vers la gauche, ma première ligne devient ma première colonne (inversée)
+    return nouv_cle
 
 def test_cle_valide(cle):
     #Pour vérifier si une clé est valide, ses cases ne doivent pas se superposer
@@ -54,10 +61,3 @@ def resultat_vers_texte(resultat):
             if str(resultat[ligne][colonne]).isalpha(): #Si c'est une lettre, l'ajouter au message
                 texte+=resultat[ligne][colonne]
     return texte
-
-
-for i in range(6):
-    print(resultat[i])
-
-
-print(resultat_vers_texte(resultat))
