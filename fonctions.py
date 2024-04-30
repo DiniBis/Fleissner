@@ -99,3 +99,27 @@ def resultat_vers_texte(resultat):
             if str(resultat[ligne][colonne]).isalpha(): #Si c'est une lettre, l'ajouter au message
                 texte+=resultat[ligne][colonne]
     return texte
+    
+def cipher(cle, message):
+    """
+        IN: message, cle
+        OUT: message (string) après Cipher / une erreur si la cle n'est pas valide
+    """
+    if test_cle_valide(cle)==False:
+        return "erreur: cle non valide"
+    message=nettoyer_message(message)
+    resultat=[[0]*len(cle[0]) for i in range(len(cle[0]))] #création d'une grille vide pour le résultat
+    #1er sens
+    resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
+    #2ème sens
+    cle=rotation_droite(cle)
+    resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
+    #3ème sens
+    cle=rotation_droite(cle)
+    resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
+    #4ème sens
+    cle=rotation_droite(cle)
+    resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
+    #Renvoyer un résultat lisible
+    texte=resultat_vers_texte(resultat)
+    return texte
