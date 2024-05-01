@@ -1,14 +1,11 @@
-from random import *
+import random
 
-cle = ((1,2,3,1,0,1),
+cle = ((0,1,0,1,0,1),
     (0,0,0,0,1,0),
     (0,0,1,0,0,0),
     (0,1,0,0,1,0),
     (0,0,0,0,0,1),
     (0,0,0,1,0,0))
-
-message="jaimelespommes"
-resultat=[[0]*len(cle[0]) for i in range(len(cle[0]))] #création d'une grille vide pour le résultat
 
 def nettoyer_message(message):
     """
@@ -76,16 +73,16 @@ def remplir_resultat(cle,message,resultat):
         resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
     """
     taille=len(cle[0])
-    alphabet="abcdefghijklmnopkrstuvwxyz"
     for ligne in range(taille): #On parcours la clé
         for colonne in range(taille):
-            if message=="": #Si le message n'a plus de caractère, ajouter un caractère aléatoire
-                resultat[ligne][colonne]=random.choice(alphabet)
-            elif cle[ligne][colonne]==1: #à chaques fois que l'on tombe sur une case valide
-                resultat[ligne][colonne]=message[0] #on transpose dans le résultat la première lettre du message
-                message=message[1:] #on retire le premier caractère
+            if cle[ligne][colonne]==1: #à chaques fois que l'on tombe sur une case valide
+                if len(message)==0: #Si le message n'a plus de caractère, ajouter un caractère aléatoire
+                    lettre_r=random.choices("abcdefghijklmnopkrstuvwxyz")
+                    resultat[ligne][colonne]=lettre_r[0]
+                else:
+                    resultat[ligne][colonne]=message[0] #on transpose dans le résultat la première lettre du message
+                    message=message[1:] #on retire le premier caractère
     return (resultat,message) #on renvoie le résultat pour ce sens de la clé, et le message modifié
-resultat, message = remplir_resultat(cle,message,resultat)[0], remplir_resultat(cle,message,resultat)[1]
 
 def resultat_vers_texte(resultat):
     """
@@ -99,7 +96,7 @@ def resultat_vers_texte(resultat):
             if str(resultat[ligne][colonne]).isalpha(): #Si c'est une lettre, l'ajouter au message
                 texte+=resultat[ligne][colonne]
     return texte
-    
+
 def cipher(cle, message):
     """
         IN: message, cle
@@ -123,3 +120,39 @@ def cipher(cle, message):
     #Renvoyer un résultat lisible
     texte=resultat_vers_texte(resultat)
     return texte
+
+def decipher(cle,message):
+    """
+        IN: message (ici après un Cipher), cle
+        OUT: message (avant Cipher)
+    """
+    #Faire les étapes du Cipher à l'envers:
+    texte_original=""
+    taille=len(cle[0])
+    #Remettre le texte dans un tableau
+    grille=[[0]*taille for i in range(taille)]
+    for ligne in range(taille):
+        for colonne in range(taille):
+            grille[ligne][colonne]=message[0]
+            message=message[1:]
+    #à partir du dernier sens de la grille
+    for i in range(4):
+        #parcourir la clé à l'envers
+        for ligne in range(taille): 
+            for colonne in range(taille):
+                #à chaques fois qu'il y a un 1, ajouter le caractère au même indice au bout de la clé
+                if cle[ligne][colonne]==1:
+                    texte_original+=grille[ligne][colonne]
+        cle=rotation_droite(cle)
+    return texte_original
+
+#TEST
+message="NeFaitesPasDeCalculEnJS"
+
+print("Message: ",message)
+
+message_chiffre = cipher(cle, message)
+print("Message chiffré:", message_chiffre)
+
+message_dechiffre = decipher(cle, message_chiffre)
+print("Message déchiffré:", message_dechiffre)
