@@ -135,12 +135,11 @@ def decipher(cle,message):
         for colonne in range(taille):
             grille[ligne][colonne]=message[0]
             message=message[1:]
-    #à partir du dernier sens de la grille
+    #parcourir la grille dans le même sans qu'à l'origine
     for i in range(4):
-        #parcourir la clé à l'envers
         for ligne in range(taille): 
             for colonne in range(taille):
-                #à chaques fois qu'il y a un 1, ajouter le caractère au même indice au bout de la clé
+                #à chaques fois qu'il y a un 1, ajouter le caractère correspondant aux indices
                 if cle[ligne][colonne]==1:
                     texte_original+=grille[ligne][colonne]
         cle=rotation_droite(cle)
