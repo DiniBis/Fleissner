@@ -26,7 +26,6 @@ def rotation_droite(cle):
         for colonne in range(taille):
             nouv_cle[colonne][taille-1-ligne]=cle[ligne][colonne] #Lors d'une rotation vers la droite, ma première ligne devient ma dernière colonne
     return nouv_cle
-nouvelle_cle=rotation_droite(cle)
 
 def rotation_gauche(cle):
     """
@@ -39,7 +38,6 @@ def rotation_gauche(cle):
         for colonne in range(taille):
             nouv_cle[taille-1-colonne][ligne]=cle[ligne][colonne] #Lors d'une rotation vers la gauche, ma première ligne devient ma première colonne (inversée)
     return nouv_cle
-nouvelle_cle=rotation_gauche(cle)
 
 def test_cle_valide(cle):
     """
@@ -133,20 +131,29 @@ def decipher(cle,message):
     grille=[[0]*taille for i in range(taille)]
     for ligne in range(taille):
         for colonne in range(taille):
-            grille[ligne][colonne]=message[0]
-            message=message[1:]
+            if len(message)>0:
+                grille[ligne][colonne]=message[0]
+                message=message[1:]
     #parcourir la grille dans le même sans qu'à l'origine
     for i in range(4):
         for ligne in range(taille): 
             for colonne in range(taille):
                 #à chaques fois qu'il y a un 1, ajouter le caractère correspondant aux indices
-                if cle[ligne][colonne]==1:
+                if cle[ligne][colonne]==1 and str(grille[ligne][colonne]).isalpha():
                     texte_original+=grille[ligne][colonne]
         cle=rotation_droite(cle)
     return texte_original
 
+def fichier_vers_cle(chemin):
+    with open(chemin, 'r') as file:
+        lines = file.readlines()
+        cle = []
+        for line in lines:
+            cle.append(tuple(int(char) for char in line.strip()))
+        return tuple(cle)
+
 #TEST
-message="NeFaitesPasDeCalculEnJS"
+message="ton message ici"
 
 print("Message: ",message)
 
